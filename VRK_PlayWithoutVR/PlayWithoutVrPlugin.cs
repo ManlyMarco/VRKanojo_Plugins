@@ -42,6 +42,7 @@ namespace VRK_Plugins
                 Logger.LogMessage("- Use arrow keys to move the camera.");
                 Logger.LogMessage("- Press Left Mouse Button for \"Yes\", and Right Mouse Button for \"No\".");
                 Logger.LogMessage("- Center your camera on buttons and blue head icons to select them.");
+                Logger.LogMessage("- Scroll mouse wheel in H scenes to change speed. You can't touch.");
             }
         }
 
