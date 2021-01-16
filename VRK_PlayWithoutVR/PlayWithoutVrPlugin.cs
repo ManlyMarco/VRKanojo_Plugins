@@ -100,7 +100,7 @@ namespace VRK_Plugins
 
             _inactiveTime += Time.deltaTime;
 
-            _cursorCg.alpha = Mathf.Max(0, 1f - (_inactiveTime - 4));
+            _cursorCg.alpha = Mathf.Clamp01(1f - (_inactiveTime - 4));
         }
 
         private static void CreateCrosshair()

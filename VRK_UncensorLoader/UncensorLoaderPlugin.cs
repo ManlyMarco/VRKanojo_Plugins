@@ -18,9 +18,9 @@ namespace VRK_Plugins
         public const string Version = "1.0";
         public const string GUID = "UncensorLoader";
 
-        private const string NoUncensorValue = "None (Censored)";
-
         private static new ManualLogSource Logger;
+
+        private const string NoUncensorValue = "None (Censored)";
         private static ConfigEntry<string> _maleUncSetting;
         private static ConfigEntry<string> _femaleUncSetting;
 
@@ -57,6 +57,7 @@ namespace VRK_Plugins
             var infos = upi.GetFiles("UncensorInfo.xml", SearchOption.AllDirectories);
 
             foreach (var fileInfo in infos)
+            {
                 try
                 {
                     var info = UncensorInfo.LoadFromFile(fileInfo);
@@ -69,8 +70,16 @@ namespace VRK_Plugins
                 {
                     Logger.LogError($"Failed to load uncensor at {fileInfo.FullName} - " + e);
                 }
+            }
 
             Logger.LogInfo("Finished loading uncensors");
+        }
+
+        private static UncensorInfo GetSelectedUncensor(UncensorType type)
+        {
+            var setting = type == UncensorType.Male ? _maleUncSetting.Value : _femaleUncSetting.Value;
+
+            return _uncensors.FirstOrDefault(x => x.Type == type && x.Name == setting);
         }
 
         private static void UncensorBundleReplaceHook(AssetBundleLoadingContext context)
@@ -93,13 +102,6 @@ namespace VRK_Plugins
                 Logger.LogDebug($"Replacing `{normalizedPath}` with `{replacement}`");
                 context.Parameters.Path = replacement;
             }
-        }
-
-        private static UncensorInfo GetSelectedUncensor(UncensorType type)
-        {
-            var setting = type == UncensorType.Male ? _maleUncSetting.Value : _femaleUncSetting.Value;
-
-            return _uncensors.FirstOrDefault(x => x.Type == type && x.Name == setting);
         }
 
         [HarmonyPrefix]
