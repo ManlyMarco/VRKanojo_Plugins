@@ -81,10 +81,10 @@ namespace VRK_Plugins
 
         private void OnApplicationFocus(bool hasFocus)
         {
-            if (hasFocus && !VRDevice.isPresent)
+            if (!VRDevice.isPresent)
             {
                 // Fix lockState getting reset after losing focus
-                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.lockState = hasFocus ? CursorLockMode.Confined : CursorLockMode.None;
             }
         }
 
