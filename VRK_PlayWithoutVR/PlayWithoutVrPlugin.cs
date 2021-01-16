@@ -19,12 +19,16 @@ namespace VRK_Plugins
         public const string GUID = "PlayWithoutVR";
 
         private static new ManualLogSource Logger;
+        private static PlayWithoutVrPlugin Instance;
 
         private void Awake()
         {
             Logger = base.Logger;
+            Instance = this;
 
             Harmony.CreateAndPatchAll(typeof(PlayWithoutVrPlugin));
+
+            enabled = false;
         }
 
         [HarmonyPostfix]
@@ -57,7 +61,7 @@ namespace VRK_Plugins
                 if (!rig.GetComponent<IllusionCamera>())
                 {
                     var cam = rig.gameObject.AddComponent<IllusionCamera>();
-                    cam.Set(new Vector3(0.65f, 1.02f, 0), Vector3.zero, 0.73f);
+                    cam.Set(new Vector3(0.65f, 1.02f, 0), Vector3.zero, 1f);
 
                     // Need to reset the camera settings
                     rig.gameObject.SetActive(false);
@@ -68,7 +72,9 @@ namespace VRK_Plugins
                     look.localEulerAngles = Vector3.zero;
 
                     CreateCrosshair();
+                    Instance.enabled = true;
                 }
+
                 Cursor.lockState = CursorLockMode.Confined;
             }
         }
@@ -80,6 +86,21 @@ namespace VRK_Plugins
                 // Fix lockState getting reset after losing focus
                 Cursor.lockState = CursorLockMode.Confined;
             }
+        }
+
+        private static CanvasGroup _cursorCg;
+        private float _inactiveTime = 5;
+
+        private void Update()
+        {
+            if (!_cursorCg) return;
+
+            if (Input.GetMouseButton(0) || Input.GetMouseButton(1) || Input.GetMouseButton(2))
+                _inactiveTime = 0;
+
+            _inactiveTime += Time.deltaTime;
+
+            _cursorCg.alpha = Mathf.Max(0, 1f - (_inactiveTime - 4));
         }
 
         private static void CreateCrosshair()
@@ -96,6 +117,11 @@ namespace VRK_Plugins
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
             crosshairRoot.AddComponent<CanvasRenderer>();
+
+            _cursorCg = crosshairRoot.AddComponent<CanvasGroup>();
+            _cursorCg.interactable = false;
+            _cursorCg.blocksRaycasts = false;
+            _cursorCg.alpha = 1;
 
             var sc = crosshairRoot.AddComponent<CanvasScaler>();
             sc.referenceResolution = new Vector2(1920, 1080);
