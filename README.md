@@ -16,7 +16,7 @@ Uncensors need to be converted for use with this plugin. Check releases for the 
 No game files are ever replaced so it's easy to disable and switch uncensors, and verifying local files doesn't remove the uncensor.
 
 ## Installation
-1. Make sure your game is updated and has at least [BepInEx v5.4.4](https://github.com/BepInEx/BepInEx) installed and properly configured.
+1. Make sure your game is updated and has at least [BepInEx v5.4.4](https://github.com/BepInEx/BepInEx) x64 installed and properly configured (change entry point Type to MonoBehaviour). To use these plugins properly I recommend to also install MessageCenter and ConfigurationManager.
 2. Download the latest release.
 3. Extract contents of the release archive directly into your game's directory.
 4. Start the game and see if there are any errors on screen.
