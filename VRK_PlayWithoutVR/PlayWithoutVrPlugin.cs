@@ -31,6 +31,14 @@ namespace VRK_Plugins
             enabled = false;
         }
 
+        [HarmonyFinalizer]
+        [HarmonyPatch(typeof(VK_Interactive), "vSettingTouchCollision")]
+        private static Exception TouchCrashFix(Exception __exception)
+        {
+            if (__exception != null) Logger.LogWarning("Preventing game crash: " + __exception);
+            return null;
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch(typeof(InitScene2), "CheckHMD")]
         private static void AllowNoHmdPatch(ref bool __result)
